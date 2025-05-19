@@ -1,39 +1,136 @@
-name: 'Action Name'
-description: 'Action Description'
+name: 'Create Feature Branch'
+description: 'Create Feature Branch in GitHub using API endpoint'
 
 inputs:
-  input-1:
-    description: Input description.
+  base-branch:
+    description: The base branch to create the new feature branch from.
     required: false
-    default: default-value
-  input-2:
-    description: Input description.
-    required: false
-    default: default-value
-  input-3:
-    description: Input description.
-    required: false
-    default: default-value
+    default: main
+  title-length:
+    description: 'The length of the issue title to keep'
+    required: true
+    default: 15
   github-token:
     description: 'GitHub token'
     required: true
+  dry-run:
+    description: 'If true, skip actual branch creation and only simulate the process.'
+    required: false
+    default: 'false'
+  use-project-prefix:
+    description: 'If true, use the project prefix in the branch name.'
+    required: false
+    default: 'false'
+  branch-prefix:
+    description: 'The prefix to use for the branch name.'
+    required: false
+    default: 'GHA'
+
+outputs:
+  branch-name:
+    description: 'The generated branch name'
+    value: ${{ steps.create-branch.outputs.branch-name }}
 
 runs:
   using: 'composite'
   steps:
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: 3.x
 
-    - name: Sample step to call GitHub API
+    - name: Create Branch from Base
+      id: create-branch
+      shell: bash
+      env:
+        GITHUB_TOKEN: ${{ inputs.github-token }}
+        BASE_BRANCH: ${{ inputs.base-branch }}
+        USE_PROJECT_PREFIX: ${{ inputs.use-project-prefix }}
+        BRANCH_PREFIX: ${{ inputs.branch-prefix }}
+        START: 0
+        LEN: ${{ inputs.title-length }}
+        DRY_RUN: ${{ inputs.dry-run }}
+      run: |
+        set -euo pipefail
+
+        ISSUE_NUMBER="${{ github.event.issue.number }}"
+        ISSUE_TITLE="${{ github.event.issue.title }}"
+        SLUG=$(echo "$ISSUE_TITLE" | tr '[:upper:]' '[:lower:]' | tr '_ ' '-'| tr -cd '[:alnum:]-' | cut -c1-"$LEN" | sed 's/-*$//')
+
+        REPO="${{ github.repository }}"
+        OWNER=$(echo "$REPO" | cut -d'/' -f1)
+        PROJECT_NO=$(echo "$REPO" | cut -d'/' -f2 | cut -d'-' -f1)
+        PROJECT_PREFIX=$(echo "$REPO" | cut -d'/' -f2 | cut -d'-' -f2 | tr '[:lower:]' '[:upper:]'| cut -c1-3)
+
+        ISSUE_JSON=$(curl -s \
+          -H "Accept: application/vnd.github+json" \
+          -H "Authorization: Bearer $GITHUB_TOKEN" \
+          "https://api.github.com/repos/$REPO/issues/$ISSUE_NUMBER")
+
+        ISSUE_TYPE=$(echo "$ISSUE_JSON" | jq -r '.type.name' | tr '[:upper:]' '[:lower:]' || echo "unknown")
+
+        case "$ISSUE_TYPE" in
+          bug) TYPE="bug" ;;
+          feature|task|"sub task") TYPE="feature" ;;
+          *) TYPE="unknown" ;;
+        esac
+
+        if [[ "$USE_PROJECT_PREFIX" == "true" ]]; then
+          BRANCH_NAME="${TYPE}/${PROJECT_PREFIX}-${PROJECT_NO}.${ISSUE_NUMBER}-${SLUG}"
+        else
+          LPADED_ISSUE_NUMBER=$(printf "%04d" "$ISSUE_NUMBER")
+          BRANCH_NAME="${TYPE}/${BRANCH_PREFIX}-${LPADED_ISSUE_NUMBER}-${SLUG}"
+        fi
+        
+        STATUS_CODE=$(curl -s -o /dev/null -w "%{http_code}" \
+          -H "Authorization: Bearer $GITHUB_TOKEN" \
+          -H "Accept: application/vnd.github+json" \
+          "https://api.github.com/repos/$REPO/branches/$BRANCH_NAME")
+
+        if [ "$STATUS_CODE" -eq 200 ]; then
+          echo "Branch $BRANCH_NAME already exists!"
+          EPOCH=$(date +%s)
+          BRANCH_NAME="${BRANCH_NAME}-${EPOCH: -4}"
+          echo "New branch name: $BRANCH_NAME"
+        fi
+
+        echo "ISSUE_NUMBER = $ISSUE_NUMBER"
+        echo "ISSUE_TITLE  = $ISSUE_TITLE"
+        echo "ISSUE_TYPE   = $ISSUE_TYPE"
+        echo "PROJECT_NO   = $PROJECT_NO"
+        echo "REPOSITORY   = $REPO"
+        echo "BRANCH_NAME  = $BRANCH_NAME"
+        echo "OWNER        = $OWNER"
+        echo "SLUG         = $SLUG"
+
+        echo "Creating branch: $BRANCH_NAME from $BASE_BRANCH"
+        echo "branch-name=$BRANCH_NAME" >> "$GITHUB_OUTPUT"
+
+        SHA=$(curl -s -H "Authorization: token $GITHUB_TOKEN" \
+          "https://api.github.com/repos/$REPO/git/ref/heads/$BASE_BRANCH" \
+          | jq -r .object.sha)
+
+        if [[ "$TYPE" == "feature" || "$TYPE" == "bug" ]]; then
+          if [[ "$DRY_RUN" == "true" ]]; then
+            echo "🧪 Dry-run mode enabled. Skipping branch creation. Would have used:"
+            echo "  ref: refs/heads/$BRANCH_NAME"
+            echo "  sha: $SHA"
+          else
+            curl -s -X POST -H "Authorization: token $GITHUB_TOKEN" \
+              -H "Content-Type: application/json" \
+              -d "{\"ref\":\"refs/heads/$BRANCH_NAME\",\"sha\":\"$SHA\"}" \
+              "https://api.github.com/repos/$REPO/git/refs"
+          fi
+        else
+          echo "❌ Issue Type is invalid for branch creation: Must be Feature / Bug / Task / Sub Task" | tee -a "$GITHUB_STEP_SUMMARY"
+          exit 1
+        fi
+
+    - name: Comment branch name on issue
+      if: inputs.dry-run != 'true'
       shell: bash
       env:
         GITHUB_TOKEN: ${{ inputs.github-token }}
       run: |
         ISSUE_NUMBER="${{ github.event.issue.number }}"
         REPO="${{ github.repository }}"
-        OWNER=$(echo $REPO | cut -d'/' -f1)
+        OWNER=$(echo "$REPO" | cut -d'/' -f1)
         BRANCH_NAME="${{ steps.create-branch.outputs.branch-name }}"
         COMMENT_BODY="Branch [$BRANCH_NAME](https://github.com/$OWNER/$REPO/tree/$BRANCH_NAME) created 🚀"
 
@@ -41,4 +138,4 @@ runs:
           -H "Authorization: token $GITHUB_TOKEN" \
           -H "Content-Type: application/json" \
           -d "{\"body\": \"$COMMENT_BODY\"}" \
-          https://api.github.com/repos/$REPO/issues/$ISSUE_NUMBER/comments
+          "https://api.github.com/repos/$REPO/issues/$ISSUE_NUMBER/comments"
