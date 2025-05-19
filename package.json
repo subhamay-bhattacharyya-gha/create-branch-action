@@ -1,0 +1,38 @@
+{
+  "name": "semantic-release-demo",
+  "version": "0.0.0",
+  "description": "A sample project using semantic release with custom plugins.",
+  "main": "index.js",
+  "scripts": {
+    "release": "semantic-release"
+  },
+  "devDependencies": {
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/commit-analyzer": "^13.0.1",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/github": "^11.0.2",
+    "@semantic-release/release-notes-generator": "^14.0.3",
+    "commitizen": "^4.3.0",
+    "cz-conventional-changelog": "^3.3.0",
+    "semantic-release": "^24.2.4"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "release": {
+    "extends": "./scripts/plugins/release.config.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/subhamay-bhattacharyya-gha/github-action-template.git"
+  },
+  "author": "Subhamay Bhattacharyya",
+  "license": "MIT",
+  "keywords": [],
+  "bugs": {
+    "url": "https://github.com/subhamay-bhattacharyya-gha/github-action-template/issues"
+  },
+  "homepage": "https://github.com/subhamay-bhattacharyya-gha/github-action-template#readme"
+}

@@ -1,0 +1,44 @@
+name: 'Action Name'
+description: 'Action Description'
+
+inputs:
+  input-1:
+    description: Input description.
+    required: false
+    default: default-value
+  input-2:
+    description: Input description.
+    required: false
+    default: default-value
+  input-3:
+    description: Input description.
+    required: false
+    default: default-value
+  github-token:
+    description: 'GitHub token'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: 3.x
+
+    - name: Sample step to call GitHub API
+      shell: bash
+      env:
+        GITHUB_TOKEN: ${{ inputs.github-token }}
+      run: |
+        ISSUE_NUMBER="${{ github.event.issue.number }}"
+        REPO="${{ github.repository }}"
+        OWNER=$(echo $REPO | cut -d'/' -f1)
+        BRANCH_NAME="${{ steps.create-branch.outputs.branch-name }}"
+        COMMENT_BODY="Branch [$BRANCH_NAME](https://github.com/$OWNER/$REPO/tree/$BRANCH_NAME) created 🚀"
+
+        curl -s -X POST \
+          -H "Authorization: token $GITHUB_TOKEN" \
+          -H "Content-Type: application/json" \
+          -d "{\"body\": \"$COMMENT_BODY\"}" \
+          https://api.github.com/repos/$REPO/issues/$ISSUE_NUMBER/comments
