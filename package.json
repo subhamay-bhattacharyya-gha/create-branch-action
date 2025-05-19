@@ -1,7 +1,7 @@
 {
-  "name": "semantic-release-demo",
+  "name": "create-branch-action",
   "version": "0.0.0",
-  "description": "A sample project using semantic release with custom plugins.",
+  "description": "Create branch action using semantic release with custom plugins.",
   "main": "index.js",
   "scripts": {
     "release": "semantic-release"
@@ -26,13 +26,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/subhamay-bhattacharyya-gha/github-action-template.git"
+    "url": "git+https://github.com/subhamay-bhattacharyya-gha/create-branch-action.git"
   },
   "author": "Subhamay Bhattacharyya",
   "license": "MIT",
   "keywords": [],
   "bugs": {
-    "url": "https://github.com/subhamay-bhattacharyya-gha/github-action-template/issues"
+    "url": "https://github.com/subhamay-bhattacharyya-gha/create-branch-action/issues"
   },
-  "homepage": "https://github.com/subhamay-bhattacharyya-gha/github-action-template#readme"
+  "homepage": "https://github.com/subhamay-bhattacharyya-gha/create-branch-action#readme"
 }
