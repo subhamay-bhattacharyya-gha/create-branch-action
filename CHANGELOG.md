@@ -1,3 +1,11 @@
+## [1.1.1](https://github.com/subhamay-bhattacharyya-gha/create-branch-action/compare/v1.1.0...v1.1.1) (2025-07-16)
+
+
+### Bug Fixes
+
+* correct slug generation by separating commands for clarity ([d3e95c7](https://github.com/subhamay-bhattacharyya-gha/create-branch-action/commit/d3e95c7ea67a08d03555ea51ae1bf3ec57519485))
+* correct syntax error in slug generation command ([7dba65c](https://github.com/subhamay-bhattacharyya-gha/create-branch-action/commit/7dba65cf1839649d2f2b315fc4e02bcc2ff2e205))
+
 # [1.1.0](https://github.com/subhamay-bhattacharyya-gha/create-branch-action/compare/v1.0.0...v1.1.0) (2025-07-16)
 
 
