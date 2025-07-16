@@ -51,7 +51,8 @@ runs:
 
         ISSUE_NUMBER="${{ github.event.issue.number }}"
         ISSUE_TITLE="${{ github.event.issue.title }}"
-        SLUG=$(echo "$ISSUE_TITLE" | tr '[:upper:]' '[:lower:]' | tr '_ ' '-'| tr -cd '[:alnum:]-' | cut -c1-"$LEN" | sed 's/-*$//|tr -s '-'')
+        SLUG=$(echo "$ISSUE_TITLE" | tr '[:upper:]' '[:lower:]' | tr '_ ' '-'| tr -cd '[:alnum:]-' | cut -c1-"$LEN" | sed 's/-*$//')
+        SLUG=$(echo "$SLUG" | tr -s '-')
 
         REPO="${{ github.repository }}"
         OWNER=$(echo "$REPO" | cut -d'/' -f1)
