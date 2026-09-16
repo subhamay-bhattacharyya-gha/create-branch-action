@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/subhamay-bhattacharyya-gha/create-branch-action/compare/v1.1.1...v1.2.0) (2026-09-16)
+
+
+### Features
+
+* update CODEOWNERS, bump Node.js version, and modify README badges ([6948156](https://github.com/subhamay-bhattacharyya-gha/create-branch-action/commit/6948156bd4c7f2097c7506b68445dcdb10eab548))
+
 ## [1.1.1](https://github.com/subhamay-bhattacharyya-gha/create-branch-action/compare/v1.1.0...v1.1.1) (2025-07-16)
 
 
