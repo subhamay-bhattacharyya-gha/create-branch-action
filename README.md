@@ -1,6 +1,19 @@
-# Create Feature Branch Composite Action
+# GitHub Composite Action : Create Feature Branch
 
-![Built with Claude Code](https://img.shields.io/badge/Built_with-Claude_Code-D97757?logo=anthropic&logoColor=white)&nbsp;![Release](https://github.com/subhamay-bhattacharyya-gha/create-branch-action/actions/workflows/release.yaml/badge.svg)&nbsp;![Commit Activity](https://img.shields.io/github/commit-activity/t/subhamay-bhattacharyya-gha/create-branch-action)&nbsp;![Last Commit](https://img.shields.io/github/last-commit/subhamay-bhattacharyya-gha/create-branch-action)&nbsp;![Release Date](https://img.shields.io/github/release-date/subhamay-bhattacharyya-gha/create-branch-action)&nbsp;![Repo Size](https://img.shields.io/github/repo-size/subhamay-bhattacharyya-gha/create-branch-action)&nbsp;![File Count](https://img.shields.io/github/directory-file-count/subhamay-bhattacharyya-gha/create-branch-action)&nbsp;![Open Issues](https://img.shields.io/github/issues/subhamay-bhattacharyya-gha/create-branch-action)&nbsp;![Top Language](https://img.shields.io/github/languages/top/subhamay-bhattacharyya-gha/create-branch-action)&nbsp;![Monthly Commit Activity](https://img.shields.io/github/commit-activity/m/subhamay-bhattacharyya-gha/create-branch-action)&nbsp;![Custom Endpoint](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/bsubhamay/ad585d14ed06ff22b281ef1453d1a0ab/raw/create-branch-action.json?)&nbsp;[![GitHub Marketplace](https://img.shields.io/badge/Marketplace-Available-blue?logo=github&style=flat-square)](https://github.com/marketplace/actions/create-feature-branch)
+<!-- Row 1: Status - Most Important -->
+[![Release](https://github.com/subhamay-bhattacharyya-gha/create-branch-action/actions/workflows/release.yaml/badge.svg)](https://github.com/subhamay-bhattacharyya-gha/create-branch-action)&nbsp;[![GitHub Action](https://img.shields.io/badge/GitHub-Action-blue?logo=github)](https://github.com/subhamay-bhattacharyya-gha/create-branch-action)&nbsp;[![Issues](https://img.shields.io/github/issues/subhamay-bhattacharyya-gha/create-branch-action)](https://github.com/subhamay-bhattacharyya-gha/create-branch-action/issues)&nbsp;[![Last Commit](https://img.shields.io/github/last-commit/subhamay-bhattacharyya-gha/create-branch-action)](https://github.com/subhamay-bhattacharyya-gha/create-branch-action/commits)
+
+<!-- Row 2: Code Quality -->
+[![Top Language](https://img.shields.io/github/languages/top/subhamay-bhattacharyya-gha/create-branch-action)](https://github.com/subhamay-bhattacharyya-gha/create-branch-action)&nbsp;[![Commits](https://img.shields.io/github/commit-activity/t/subhamay-bhattacharyya-gha/create-branch-action)](https://github.com/subhamay-bhattacharyya-gha/create-branch-action/commits)
+
+<!-- Row 3: Tech Stack -->
+[![Built with Claude Code](https://img.shields.io/badge/Built_with-Claude_Code-D97757?logo=anthropic&logoColor=white)](https://claude.ai/)
+
+<!-- Row 4: Repository Info -->
+[![Files](https://img.shields.io/github/directory-file-count/subhamay-bhattacharyya-gha/create-branch-action)](https://github.com/subhamay-bhattacharyya-gha/create-branch-action)&nbsp;[![Repo Size](https://img.shields.io/github/repo-size/subhamay-bhattacharyya-gha/create-branch-action)](https://github.com/subhamay-bhattacharyya-gha/create-branch-action)&nbsp;[![Release Date](https://img.shields.io/github/release-date/subhamay-bhattacharyya-gha/create-branch-action)](https://github.com/subhamay-bhattacharyya-gha/create-branch-action/releases)
+
+<!-- Row 5: Custom Metrics -->
+[![Custom Endpoint](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/bsubhamay/ad585d14ed06ff22b281ef1453d1a0ab/raw/create-branch-action.json?)](https://gist.github.com/bsubhamay/ad585d14ed06ff22b281ef1453d1a0ab)
 
 A GitHub Composite Action to automatically create a feature branch from an issue using the GitHub API.
 
@@ -73,7 +86,7 @@ on:
 
 jobs:
   create-feature-branch:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     permissions:
       issues: write
       contents: write
